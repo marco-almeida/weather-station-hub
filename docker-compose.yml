@@ -23,11 +23,10 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      # create topics
-    command: chmod +x kafka_entrypoint.sh && ./kafka_entrypoint.sh
 
   data-gen:
     build: ./data-gen
     container_name: data-gen
     depends_on:
       - broker
+    network_mode: "host"

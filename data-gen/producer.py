@@ -1,13 +1,11 @@
 import json
 import logging
+import socket
 import sys
 import time
-from argparse import ArgumentParser, FileType
-from configparser import ConfigParser
 from random import randint
 
 from confluent_kafka import Producer
-
 from station import Station
 
 logging.basicConfig(
@@ -31,19 +29,10 @@ def acked(err, msg):
 
 
 if __name__ == "__main__":
-    # Parse the command line.
-    parser = ArgumentParser()
-    parser.add_argument("config_file", type=FileType("r"))
-    args = parser.parse_args()
-
-    config_parser = ConfigParser()
-    config_parser.read_file(args.config_file)
-    config = dict(config_parser["default"])
-
     # Create Producer instance
-    producer = Producer(config)
+    producer = Producer({"bootstrap.servers": "localhost:9092", "client.id": socket.gethostname()})
 
-    # create 5 stations with random variation (1-5)
+    # create 5 stations with variation 1-5
     stations = [Station(i) for i in range(5)]
 
     while True:

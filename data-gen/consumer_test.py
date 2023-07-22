@@ -1,35 +1,16 @@
 from argparse import ArgumentParser, FileType
 from configparser import ConfigParser
 
-from confluent_kafka import OFFSET_BEGINNING, Consumer
-
-
-# Set up a callback to handle the '--reset' flag.
-def reset_offset(consumer, partitions):
-    if args.reset:
-        for p in partitions:
-            p.offset = OFFSET_BEGINNING
-        consumer.assign(partitions)
-
+from confluent_kafka import Consumer
 
 if __name__ == "__main__":
-    # Parse the command line.
-    parser = ArgumentParser()
-    parser.add_argument("config_file", type=FileType("r"))
-    parser.add_argument("--reset", action="store_true")
-    args = parser.parse_args()
-
-    config_parser = ConfigParser()
-    config_parser.read_file(args.config_file)
-    config = dict(config_parser["default"])
-    config.update(config_parser["consumer"])
-
     # Create Consumer instance
+    config = {"bootstrap.servers": "localhost:9092", "group.id": "weather-station", "auto.offset.reset": "earliest"}
     consumer = Consumer(config)
 
     # Subscribe to topic
     topic = ["temperature", "wind", "humidity", "pressure", "precipitation", "radiation"]
-    consumer.subscribe([f"weather_station-{x}" for x in topic], on_assign=reset_offset)
+    consumer.subscribe([f"weather_station-{x}" for x in topic])
 
     # Poll for new messages from Kafka and print them.
     try:
