@@ -1,4 +1,6 @@
 import json
+import logging
+import sys
 import time
 from argparse import ArgumentParser, FileType
 from configparser import ConfigParser
@@ -6,20 +8,26 @@ from random import randint
 
 from confluent_kafka import Producer
 
+from station import Station
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s,%(msecs)03d: %(module)17s->%(funcName)-15s - [%(levelname)7s] - %(message)s",
+    handlers=[logging.StreamHandler(stream=sys.stdout)],
+)
+
+logger = logging.getLogger().getChild("System")
+
 
 def acked(err, msg):
     if err:
-        print("Failed to deliver message: %s: %s" % (str(msg), str(err)))
+        logger.info("Failed to deliver message: %s: %s" % (str(msg), str(err)))
     else:
-        print(
+        logger.info(
             "Produced event to topic {topic}: key = {key} value = {value}".format(
                 topic=msg.topic(), key=msg.key().decode("utf-8"), value=msg.value().decode("utf-8")
             )
         )
-
-
-def get_json_payload(timestamp: int, value: int) -> str:
-    return f'{{"timestamp": {timestamp}, "value": {value}}}'
 
 
 if __name__ == "__main__":
@@ -35,18 +43,16 @@ if __name__ == "__main__":
     # Create Producer instance
     producer = Producer(config)
 
+    # create 5 stations with random variation (1-5)
+    stations = [Station(i) for i in range(5)]
+
     while True:
         time.sleep(randint(1, 5))
-        timestamp = int(time.time())
-        apparent = 25 + randint(-5, 5)  # °C
-        real = apparent - randint(0, 5)  # °C
-        wind_speed = 60 + randint(-40, 20)  # km/h
-        wind_direction = randint(0, 360)  # °
-        humidity = 60 + randint(-10, 20)  # %
-        pressure = 1015 + randint(-5, 5)  # hPa
-        precipitation = randint(0, 10)  # mm
-        uv = randint(1, 11)  # scale
-        solar = randint(100, 600)  # scale
+        # choose random station
+        station = stations[randint(0, len(stations) - 1)]
+        data = station.generate_data()
+        producer.produce("weather_station-temperature", key="real", value=json.dumps(data), callback=acked)
+        send_data()
         # producer.produce("weather_station-temperature", key="apparent", value=str(25 + randint(-5, 5)), callback=acked)
         # producer.produce("weather_station-temperature", key="real", value=str(20 + randint(-5, 10)), callback=acked)
         producer.produce("weather_station-temperature", key="real", value=json.dumps({"cena": 1, "ts": timestamp}), callback=acked)
