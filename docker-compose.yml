@@ -23,7 +23,8 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-    entrypoint: [ "./kafka_entrypoint.sh" ]
+      # create topics
+    command: chmod +x kafka_entrypoint.sh && ./kafka_entrypoint.sh
 
   data-gen:
     build: ./data-gen
