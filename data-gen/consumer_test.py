@@ -45,8 +45,8 @@ if __name__ == "__main__":
             else:
                 # Extract the (optional) key and value, and print.
                 print(
-                    "Consumed event from topic {topic}: key = {key} value = {value} timestamp = {timestamp}".format(
-                        topic=msg.topic(), key=msg.key().decode("utf-8"), value=msg.value().decode("utf-8"), timestamp=msg.timestamp()
+                    "Consumed event from topic {topic}: key = {key} value = {value}".format(
+                        topic=msg.topic(), key=msg.key().decode("utf-8"), value=msg.value().decode("utf-8")
                     )
                 )
     except KeyboardInterrupt:
