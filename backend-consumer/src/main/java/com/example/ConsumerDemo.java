@@ -8,7 +8,7 @@ import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.json.*;
 import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
@@ -61,6 +61,9 @@ public class ConsumerDemo {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
 
                 for (ConsumerRecord<String, String> record : records) {
+                    JSONObject json = new JSONObject(record.value());
+                    int stationId = json.getInt("station_id");
+                    System.out.printf("POST to api/v1/station/%d/%s with body %s\n", stationId, record.topic(), "asdasd");
                     log.info("Key: " + record.key() + ", Value: " + record.value());
                     log.info("Partition: " + record.partition() + ", Offset:" + record.offset());
                 }
