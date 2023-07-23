@@ -10,18 +10,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 public class ConsumerDemo {
     private static final Logger log = LoggerFactory.getLogger(ConsumerDemo.class);
 
     public static void main(String[] args) {
-        log.info("I am a Kafka Consumer");
+        log.info("Starting Kafka Consumer");
 
         String bootstrapServers = "127.0.0.1:9092";
-        String groupId = "python_example_group_1";
-        String topic = "weather_station-temperature";
+        String groupId = "weather_station_java_consumer";
+        List<String> topics = List.of("temperature", "humidity", "precipitation", "radiation", "wind");
+        List<String> finalTopics = topics.stream().map(x -> "weather_station-" + x).toList();
 
         // create consumer configs
         Properties properties = new Properties();
@@ -53,12 +54,11 @@ public class ConsumerDemo {
         try {
 
             // subscribe consumer to our topic(s)
-            consumer.subscribe(Arrays.asList(topic));
+            consumer.subscribe(finalTopics);
 
             // poll for new data
             while (true) {
-                ConsumerRecords<String, String> records =
-                        consumer.poll(Duration.ofMillis(100));
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
 
                 for (ConsumerRecord<String, String> record : records) {
                     log.info("Key: " + record.key() + ", Value: " + record.value());
@@ -75,6 +75,5 @@ public class ConsumerDemo {
             consumer.close(); // this will also commit the offsets if need be.
             log.info("The consumer is now gracefully closed.");
         }
-
     }
 }
