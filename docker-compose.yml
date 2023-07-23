@@ -34,3 +34,15 @@ services:
     depends_on:
       - broker
     network_mode: "host"
+
+  mysql5:
+    container_name: mysql5
+    image: mysql/mysql-server:5.7
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret1
+      - MYSQL_DATABASE=demo
+      - MYSQL_USER=demo
+      - MYSQL_PASSWORD=secret2
+    ports:
+      - '33060:3306'
