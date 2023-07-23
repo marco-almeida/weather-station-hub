@@ -26,6 +26,7 @@ services:
 
   data-gen:
     build: ./data-gen
+    image: data-gen
     container_name: data-gen
     depends_on:
       - broker
