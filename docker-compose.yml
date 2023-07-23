@@ -3,6 +3,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     hostname: zookeeper
+    restart: unless-stopped
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -11,6 +12,7 @@ services:
   broker:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker
+    restart: unless-stopped
     ports:
       - "9092:9092"
     depends_on:
@@ -28,6 +30,7 @@ services:
     build: ./data-gen
     image: data-gen
     container_name: data-gen
+    restart: unless-stopped
     depends_on:
       - broker
     network_mode: "host"
