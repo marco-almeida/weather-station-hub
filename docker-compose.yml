@@ -57,3 +57,14 @@ services:
     depends_on:
       - data-gen
     network_mode: "host"
+
+  api:
+    build: ./api-service
+    image: api-service
+    container_name: api-service
+    restart: unless-stopped
+    depends_on:
+      - kafka-consumer
+      - mysql5
+    ports:
+      - "8080:8080"
