@@ -24,7 +24,7 @@ class Station:
         ]
         func, topic = functions[randint(0, len(functions) - 1)]
         payload = func()
-        return topic, {"station_id": self.id, "timestamp": int(time.time()), "type": topic, "payload": payload}
+        return topic, {"station_id": self.id, "timestamp": int(time.time()), "value": payload}
 
     def generate_real_temperature_data(self):
         apparent = 25 + randint(-self.variation, self.variation)  # °C
