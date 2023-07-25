@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,5 +20,5 @@ public class Station {
     private Long id;
 
     @OneToMany(cascade = {CascadeType.ALL})
-    private List<Measurement> measurements;
+    private List<Measurement> measurements = new ArrayList<>();
 }
