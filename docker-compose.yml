@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     depends_on:
       - broker
-    network_mode: "host"
+    network_mode: host
 
   mysql5:
     container_name: mysql5
@@ -56,7 +56,7 @@ services:
     restart: unless-stopped
     depends_on:
       - data-gen
-    network_mode: "host"
+    network_mode: host
 
   api:
     build: ./api-service
@@ -68,3 +68,9 @@ services:
       - mysql5
     ports:
       - "8080:8080"
+    environment:
+      - MYSQL_HOST=mysql5
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=demo
+      - MYSQL_USER=demo
+      - MYSQL_PASSWORD=secret2
