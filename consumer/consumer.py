@@ -23,7 +23,7 @@ def commit_completed(err, partitions):
 
 
 conf = {
-    "bootstrap.servers": "localhost:9092,broker:9092",
+    "bootstrap.servers": "localhost:9092",
     "group.id": "foo",
     "default.topic.config": {"auto.offset.reset": "earliest"},
     "on_commit": commit_completed,
@@ -38,8 +38,10 @@ def msg_process(msg):
     station_id = payload.pop("station_id")
     msg_type = msg.topic().split("-")[1]
     payload["type"] = msg_type
-    print(f"Sending {msg_type} data {payload} to station {station_id}")
-    requests.post(f"{API_URL}/station/{station_id}/payload", json=payload)
+    logger.info(f"Sending {msg_type} data {payload} to station {station_id}")
+    response = requests.post(f"{API_URL}/station/{station_id}/payload", json=payload)
+    if response.status_code != 200:
+        logger.error(f"Failed to send data to station {station_id}: {response.text}")
 
 
 def consume_loop(consumer, topics):

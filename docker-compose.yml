@@ -48,3 +48,12 @@ services:
       - '33060:3306'
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
+
+  kafka-consumer:
+    build: ./consumer
+    image: kafka-consumer
+    container_name: kafka-consumer
+    restart: unless-stopped
+    depends_on:
+      - data-gen
+    network_mode: "host"
