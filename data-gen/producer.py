@@ -6,6 +6,7 @@ import time
 from random import randint
 
 from confluent_kafka import Producer
+from confluent_kafka.admin import AdminClient, NewTopic
 from station import Station
 
 logging.basicConfig(
@@ -30,7 +31,22 @@ def acked(err, msg):
 
 if __name__ == "__main__":
     # Create Producer instance
-    producer = Producer({"bootstrap.servers": "localhost:9092", "client.id": socket.gethostname()})
+    conf = {"bootstrap.servers": "localhost:9092", "client.id": socket.gethostname()}
+    producer = Producer(conf)
+    # create some topics
+    admin = AdminClient({"bootstrap.servers": "localhost:9092"})
+    topics = [
+        "real_temperature",
+        "apparent_temperature",
+        "wind_direction",
+        "wind_speed",
+        "humidity",
+        "pressure",
+        "precipitation",
+        "solar_radiation",
+        "uv",
+    ]
+    admin.create_topics([NewTopic(f"weather_station-{i}", num_partitions=1, replication_factor=1) for i in topics])
 
     # create 5 stations with variation 1-5
     stations = [Station(i) for i in range(5)]
