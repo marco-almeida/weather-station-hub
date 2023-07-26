@@ -19,7 +19,6 @@ public class MeasurementController {
     @Autowired
     private MeasurementService measurementService;
 
-
     @PostMapping("/station/{station_id}/payload")
     public ResponseEntity<Measurement> submitMeasurement(@PathVariable("station_id") long stationId,
                                                          @RequestBody Measurement measurement) {
@@ -30,6 +29,16 @@ public class MeasurementController {
     @GetMapping("stations/payloads")
     public ResponseEntity<List<Measurement>> getAllMeasurements() {
         List<Measurement> measurements = measurementService.getAllMeasurements();
+        return new ResponseEntity<>(measurements, HttpStatus.OK);
+    }
+
+    @GetMapping("/measurement")
+    public ResponseEntity<List<Measurement>> getMeasurementsWhere(@RequestParam String type,
+                                                                  @RequestParam(name = "station_ids", required = false) List<Long> stationIds) {
+        List<Measurement> measurements = measurementService.getAllMeasurementsWhere(type);
+        if (stationIds != null) {
+            measurements = measurements.stream().filter(x -> stationIds.contains(x.getStation().getId())).toList();
+        }
         return new ResponseEntity<>(measurements, HttpStatus.OK);
     }
 

@@ -31,9 +31,14 @@ public class MeasurementService {
         Station s = stationRepository.findById(stationId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Station with id %d does not exist",
                         stationId)));
-        s.getMeasurements().add(measurement);
+        s.addMeasurement(measurement);
         stationRepository.save(s);
         return measurement;
     }
+
+    public List<Measurement> getAllMeasurementsWhere(String type) {
+        return measurementRepository.findAll().stream().filter(x -> x.getType().equalsIgnoreCase(type)).toList();
+    }
+
 
 }

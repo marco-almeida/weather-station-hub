@@ -1,4 +1,5 @@
 package com.example.weatherstation.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,4 +25,8 @@ public class Measurement {
 
     @Column(nullable = false)
     private double value;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Station station;
 }
