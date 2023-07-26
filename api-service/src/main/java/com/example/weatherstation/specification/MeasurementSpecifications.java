@@ -9,11 +9,20 @@ public class MeasurementSpecifications {
         return (root, query, builder) -> builder.equal(root.get("type"), type);
     }
 
-    public static Specification<Measurement> valueEquals(double value) {
-        return (root, query, builder) -> builder.equal(root.get("value"), value);
+    public static Specification<Measurement> valueGreaterThan(double value) {
+        return (root, query, builder) -> builder.greaterThan(root.get("value"), value);
     }
 
-    public static Specification<Measurement> timestampEquals(Long timestamp) {
-        return (root, query, builder) -> builder.equal(root.get("timestamp"), timestamp);
+    public static Specification<Measurement> valueLessThanOrEqual(double value) {
+        return (root, query, builder) -> builder.lessThanOrEqualTo(root.get("value"), value);
     }
+
+    public static Specification<Measurement> timestampGreaterThan(long timestamp) {
+        return (root, query, builder) -> builder.greaterThan(root.get("timestamp"), timestamp);
+    }
+
+    public static Specification<Measurement> timestampLessThanOrEqual(long timestamp) {
+        return (root, query, builder) -> builder.lessThanOrEqualTo(root.get("timestamp"), timestamp);
+    }
+
 }

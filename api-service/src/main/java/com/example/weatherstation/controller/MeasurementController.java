@@ -36,10 +36,14 @@ public class MeasurementController {
     public ResponseEntity<List<Measurement>> getMeasurementsWhere(@RequestParam(required = false) String type,
                                                                   @RequestParam(name = "station_ids", required = false) List<Long> stationIds,
                                                                   @RequestParam(name = "greater_than", required = false) Float greatherThan,
+                                                                  @RequestParam(name= "less_equal_than", required = false) Float lessEqualThan,
+                                                                  @RequestParam(name= "earlier_equal_than", required = false) Long earlierEqualThan,
                                                                   @RequestParam(name = "later_than", required = false) Long laterThan) {
         List<Measurement> measurements = measurementService.getAllMeasurementsWhere(type,
                 stationIds,
+                lessEqualThan,
                 greatherThan,
+                earlierEqualThan,
                 laterThan);
         return new ResponseEntity<>(measurements, HttpStatus.OK);
     }

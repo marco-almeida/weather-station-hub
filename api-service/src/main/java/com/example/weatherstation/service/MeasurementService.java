@@ -38,20 +38,28 @@ public class MeasurementService {
         return measurement;
     }
 
-    public List<Measurement> getAllMeasurementsWhere(String type, List<Long> stationIds, Float biggerThan, Long laterThan) {
+    public List<Measurement> getAllMeasurementsWhere(String type, List<Long> stationIds, Float lessEqualThan, Float greaterThan, Long earlierEqualThan,  Long laterThan) {
         Specification<Measurement> spec = Specification.where(null);
 
         if (type != null) {
             spec = spec.and(MeasurementSpecifications.typeEquals(type));
         }
 
-//        if (value != null) {
-//            spec = spec.and(MeasurementSpecifications.valueEquals(value));
-//        }
-//
-//        if (timestamp != null) {
-//            spec = spec.and(MeasurementSpecifications.timestampEquals(timestamp));
-//        }
+        if (greaterThan != null) {
+            spec = spec.and(MeasurementSpecifications.valueGreaterThan(greaterThan));
+        }
+
+        if (lessEqualThan != null) {
+            spec = spec.and(MeasurementSpecifications.valueLessThanOrEqual(lessEqualThan));
+        }
+
+        if (earlierEqualThan != null) {
+            spec = spec.and(MeasurementSpecifications.timestampLessThanOrEqual(earlierEqualThan));
+        }
+
+        if (laterThan != null) {
+            spec = spec.and(MeasurementSpecifications.timestampGreaterThan(laterThan));
+        }
 
         return measurementRepository.findAll(spec);
     }
