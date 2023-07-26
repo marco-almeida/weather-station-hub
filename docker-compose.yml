@@ -27,8 +27,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     healthcheck:
       test: nc -z localhost 9092 || exit -1
-      start_period: 10s
-      interval: 5s
+      start_period: 14s
+      interval: 2s
       timeout: 10s
       retries: 10
 
@@ -57,8 +57,8 @@ services:
       - ./mysql:/docker-entrypoint-initdb.d
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
-      start_period: 5s
-      interval: 5s
+      start_period: 7s
+      interval: 2s
       timeout: 5s
       retries: 55
 
@@ -70,12 +70,15 @@ services:
     depends_on:
       broker:
         condition: service_healthy
+      api:
+        condition: service_healthy
+
     network_mode: "host"
 
   api:
-    build: ./api-service
-    image: api-service
-    container_name: api-service
+    build: ./api
+    image: api
+    container_name: api
     restart: unless-stopped
     depends_on:
       mysql5:
@@ -88,3 +91,9 @@ services:
       - MYSQL_DATABASE=demo
       - MYSQL_USER=demo
       - MYSQL_PASSWORD=secret2
+    healthcheck:
+      test: "wget -qO- http://localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
