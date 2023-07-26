@@ -5,7 +5,9 @@ import com.example.weatherstation.model.Measurement;
 import com.example.weatherstation.model.Station;
 import com.example.weatherstation.repository.MeasurementRepository;
 import com.example.weatherstation.repository.StationRepository;
+import com.example.weatherstation.specification.MeasurementSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,8 +38,22 @@ public class MeasurementService {
         return measurement;
     }
 
-    public List<Measurement> getAllMeasurementsWhere(String type) {
-        return measurementRepository.findAll().stream().filter(x -> x.getType().equalsIgnoreCase(type)).toList();
+    public List<Measurement> getAllMeasurementsWhere(String type, List<Long> stationIds, Float biggerThan, Long laterThan) {
+        Specification<Measurement> spec = Specification.where(null);
+
+        if (type != null) {
+            spec = spec.and(MeasurementSpecifications.typeEquals(type));
+        }
+
+//        if (value != null) {
+//            spec = spec.and(MeasurementSpecifications.valueEquals(value));
+//        }
+//
+//        if (timestamp != null) {
+//            spec = spec.and(MeasurementSpecifications.timestampEquals(timestamp));
+//        }
+
+        return measurementRepository.findAll(spec);
     }
 
 

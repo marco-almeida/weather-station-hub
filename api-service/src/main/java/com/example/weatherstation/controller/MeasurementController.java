@@ -33,12 +33,14 @@ public class MeasurementController {
     }
 
     @GetMapping("/measurement")
-    public ResponseEntity<List<Measurement>> getMeasurementsWhere(@RequestParam String type,
-                                                                  @RequestParam(name = "station_ids", required = false) List<Long> stationIds) {
-        List<Measurement> measurements = measurementService.getAllMeasurementsWhere(type);
-        if (stationIds != null) {
-            measurements = measurements.stream().filter(x -> stationIds.contains(x.getStation().getId())).toList();
-        }
+    public ResponseEntity<List<Measurement>> getMeasurementsWhere(@RequestParam(required = false) String type,
+                                                                  @RequestParam(name = "station_ids", required = false) List<Long> stationIds,
+                                                                  @RequestParam(name = "greater_than", required = false) Float greatherThan,
+                                                                  @RequestParam(name = "later_than", required = false) Long laterThan) {
+        List<Measurement> measurements = measurementService.getAllMeasurementsWhere(type,
+                stationIds,
+                greatherThan,
+                laterThan);
         return new ResponseEntity<>(measurements, HttpStatus.OK);
     }
 
