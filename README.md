@@ -15,3 +15,7 @@ Weather station hub is a project carried out as a way to learn more about Spring
 `docker compose up --build # use -d to run in detached mode`
 
 That should be it.
+
+## Development
+
+To rebuild a specific service, use: `docker compose up -d --no-deps --build <service_name>`

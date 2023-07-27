@@ -15,6 +15,13 @@ public class StationService {
     @Autowired
     private StationRepository repository;
 
+    public List<String> availableTypesByStation(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException(String.format("Station with id %d not found", id));
+        }
+        return repository.findDistinctMeasurementTypesByStationId(id);
+    }
+
     public Station getStation(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Station with id %d not found", id)));

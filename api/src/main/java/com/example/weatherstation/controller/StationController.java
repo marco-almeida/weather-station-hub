@@ -35,4 +35,9 @@ public class StationController {
         return new ResponseEntity<>(s, HttpStatus.CREATED);
     }
 
+    @GetMapping("station/{id}/available_measurement_types")
+    public List<String> getStationAvailableMeasurementTypes(@PathVariable("id") long stationId) {
+        return stationService.availableTypesByStation(stationId);
+    }
+
 }
