@@ -20,18 +20,13 @@ public class MeasurementService {
     @Autowired
     private StationRepository stationRepository;
 
-    public Measurement getMeasurement(Long id) {
-        return measurementRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not Found!"));
-    }
-
     public List<Measurement> getAllMeasurements() {
         return measurementRepository.findAll();
     }
 
     public Measurement saveMeasurementInStation(Long stationId, Measurement measurement) {
         Station s = stationRepository.findById(stationId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Station with id %d does not exist",
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Station with id %d not found",
                         stationId)));
         s.addMeasurement(measurement);
         stationRepository.save(s);
@@ -75,9 +70,18 @@ public class MeasurementService {
 
     public void removeMeasurement(Long measurementId) {
         Measurement m = measurementRepository.findById(measurementId)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Measurement with id %d not found",
+                        measurementId)));
         Station t = m.getStation();
         t.removeMeasurement(m);
         stationRepository.save(t);
+    }
+
+    public Measurement ammendMeasurement(Long measurementId, Measurement newMeasurement) {
+        Measurement m = measurementRepository.findById(measurementId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Measurement with id %d not found",
+                        measurementId)));
+        m.setValue(newMeasurement.getValue());
+        return saveMeasurementInStation(m.getStation().getId(), m);
     }
 }

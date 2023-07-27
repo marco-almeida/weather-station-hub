@@ -32,31 +32,25 @@ public class MeasurementController {
     }
 
     @GetMapping("stations/payloads")
-    public ResponseEntity<List<MeasurementDTO>> getAllMeasurements() {
+    public List<MeasurementDTO> getAllMeasurements() {
         List<Measurement> measurements = measurementService.getAllMeasurements();
-        List<MeasurementDTO> measurementDtos = measurements.stream()
-                .map(m -> modelMapper.map(m, MeasurementDTO.class))
-                .toList();
-        return ResponseEntity.ok().body(measurementDtos);
+        return measurements.stream().map(m -> modelMapper.map(m, MeasurementDTO.class)).toList();
     }
 
     @GetMapping("/measurement")
-    public ResponseEntity<List<MeasurementDTO>> getMeasurementsWhere(@RequestParam(required = false) String type,
-                                                                     @RequestParam(name = "station_ids", required = false) List<Long> stationIds,
-                                                                     @RequestParam(name = "greater_than", required = false) Float greatherThan,
-                                                                     @RequestParam(name = "less_equal_than", required = false) Float lessEqualThan,
-                                                                     @RequestParam(name = "earlier_equal_than", required = false) Long earlierEqualThan,
-                                                                     @RequestParam(name = "later_than", required = false) Long laterThan) {
+    public List<MeasurementDTO> getMeasurementsWhere(@RequestParam(required = false) String type,
+                                                     @RequestParam(name = "station_ids", required = false) List<Long> stationIds,
+                                                     @RequestParam(name = "greater_than", required = false) Float greatherThan,
+                                                     @RequestParam(name = "less_equal_than", required = false) Float lessEqualThan,
+                                                     @RequestParam(name = "earlier_equal_than", required = false) Long earlierEqualThan,
+                                                     @RequestParam(name = "later_than", required = false) Long laterThan) {
         List<Measurement> measurements = measurementService.getAllMeasurementsWhere(type,
                 stationIds,
                 lessEqualThan,
                 greatherThan,
                 earlierEqualThan,
                 laterThan);
-        List<MeasurementDTO> measurementDtos = measurements.stream()
-                .map(m -> modelMapper.map(m, MeasurementDTO.class))
-                .toList();
-        return new ResponseEntity<>(measurementDtos, HttpStatus.OK);
+        return measurements.stream().map(m -> modelMapper.map(m, MeasurementDTO.class)).toList();
     }
 
     @DeleteMapping("measurement/{id}")
@@ -66,11 +60,8 @@ public class MeasurementController {
     }
 
     @PatchMapping("/measurement/{id}")
-    public ResponseEntity<Measurement> updateMeasurement(@PathVariable(value = "id") Long measurementId,
-                                                         @RequestBody Measurement measurementDetails) {
-        Measurement m = measurementService.getMeasurement(measurementId);
-        m.setValue(measurementDetails.getValue());
-        Measurement updatedMeasurement = measurementService.saveMeasurementInStation(m.getStation().getId(), m);
-        return ResponseEntity.ok(updatedMeasurement);
+    public Measurement ammendMeasurement(@PathVariable(value = "id") Long measurementId,
+                                         @RequestBody Measurement measurementDetails) {
+        return measurementService.ammendMeasurement(measurementId, measurementDetails);
     }
 }

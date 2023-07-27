@@ -20,15 +20,13 @@ public class StationController {
     private StationService stationService;
 
     @GetMapping("/station/{id}")
-    public ResponseEntity<Station> getStationStuff(@PathVariable("id") long stationId) {
-        Station s = stationService.getStation(stationId);
-        return new ResponseEntity<>(s, HttpStatus.OK);
+    public Station getStationStuff(@PathVariable("id") long stationId) {
+        return stationService.getStation(stationId);
     }
 
     @GetMapping("/stations")
-    public ResponseEntity<List<Long>> getAllStationIds() {
-        List<Long> s = stationService.getAllStationIds();
-        return new ResponseEntity<>(s, HttpStatus.OK);
+    public List<Long> getAllStationIds() {
+        return stationService.getAllStationIds();
     }
 
     @PostMapping("/station/{id}")

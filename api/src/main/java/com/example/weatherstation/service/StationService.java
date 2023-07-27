@@ -16,7 +16,8 @@ public class StationService {
     private StationRepository repository;
 
     public Station getStation(Long id) {
-        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Resource not Found!"));
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Station with id %d not found", id)));
     }
 
     public List<Long> getAllStationIds() {
