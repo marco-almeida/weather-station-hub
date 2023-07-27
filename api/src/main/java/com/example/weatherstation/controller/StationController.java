@@ -19,8 +19,8 @@ public class StationController {
     @Autowired
     private StationService stationService;
 
-    @GetMapping("/station/{station_id}")
-    public ResponseEntity<Station> getStationStuff(@PathVariable("station_id") long stationId) {
+    @GetMapping("/station/{id}")
+    public ResponseEntity<Station> getStationStuff(@PathVariable("id") long stationId) {
         Station s = stationService.getStation(stationId);
         return new ResponseEntity<>(s, HttpStatus.OK);
     }
@@ -31,8 +31,8 @@ public class StationController {
         return new ResponseEntity<>(s, HttpStatus.OK);
     }
 
-    @PostMapping("/station/{station_id}")
-    public ResponseEntity<Station> createStation(@PathVariable("station_id") long stationId) {
+    @PostMapping("/station/{id}")
+    public ResponseEntity<Station> createStation(@PathVariable("id") long stationId) {
         Station s = stationService.createStation(stationId);
         return new ResponseEntity<>(s, HttpStatus.CREATED);
     }
