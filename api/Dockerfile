@@ -8,6 +8,8 @@ COPY ./mvnw ./mvnw
 
 RUN chmod +x ./mvnw
 
+# account for CRLF line endings
+RUN apk add --no-cache dos2unix && dos2unix ./mvnw && chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline -B
 
 COPY ./src ./src
