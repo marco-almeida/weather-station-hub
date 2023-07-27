@@ -72,4 +72,12 @@ public class MeasurementService {
 
         return measurementRepository.findAll(spec);
     }
+
+    public void removeMeasurement(Long measurementId) {
+        Measurement m = measurementRepository.findById(measurementId)
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
+        Station t = m.getStation();
+        t.removeMeasurement(m);
+        stationRepository.save(t);
+    }
 }

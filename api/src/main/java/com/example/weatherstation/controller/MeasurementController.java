@@ -3,6 +3,7 @@ package com.example.weatherstation.controller;
 import com.example.weatherstation.dto.MeasurementDTO;
 import com.example.weatherstation.model.Measurement;
 import com.example.weatherstation.service.MeasurementService;
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,12 @@ public class MeasurementController {
                 .map(m -> modelMapper.map(m, MeasurementDTO.class))
                 .toList();
         return new ResponseEntity<>(measurementDtos, HttpStatus.OK);
+    }
+
+    @DeleteMapping("measurement/{measurement_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteMeasurement(@PathVariable("measurement_id") Long measurementId) {
+        measurementService.removeMeasurement(measurementId);
     }
 
 }
