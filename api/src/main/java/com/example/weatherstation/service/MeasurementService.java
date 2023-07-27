@@ -45,15 +45,13 @@ public class MeasurementService {
                                                      Long earlierEqualThan,
                                                      Long laterThan) {
         Specification<Measurement> spec = Specification.where(null);
-        System.out.println(type);
-        System.out.println(stationIds);
-        System.out.println(lessEqualThan);
-        System.out.println(greaterThan);
-        System.out.println(earlierEqualThan);
-        System.out.println(laterThan);
 
         if (type != null) {
             spec = spec.and(MeasurementSpecifications.typeEquals(type));
+        }
+
+        if (stationIds != null) {
+            spec = spec.and(MeasurementSpecifications.belongsToStations(stationIds));
         }
 
         if (greaterThan != null) {
@@ -74,6 +72,4 @@ public class MeasurementService {
 
         return measurementRepository.findAll(spec);
     }
-
-
 }

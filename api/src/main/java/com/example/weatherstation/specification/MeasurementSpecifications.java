@@ -1,7 +1,11 @@
 package com.example.weatherstation.specification;
 
 import com.example.weatherstation.model.Measurement;
+import com.example.weatherstation.model.Station;
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.List;
 
 public class MeasurementSpecifications {
 
@@ -23,6 +27,16 @@ public class MeasurementSpecifications {
 
     public static Specification<Measurement> timestampLessThanOrEqual(long timestamp) {
         return (root, query, builder) -> builder.lessThanOrEqualTo(root.get("timestamp"), timestamp);
+    }
+
+    public static Specification<Measurement> belongsToStations(List<Long> stationIds) {
+        return (root, query, builder) -> {
+            // Navigate to the Station object within Measurement
+            Join<Measurement, Station> stationJoin = root.join("station");
+
+            // Create a predicate to check if the station ID is in the list
+            return stationJoin.get("id").in(stationIds);
+        };
     }
 
 }
