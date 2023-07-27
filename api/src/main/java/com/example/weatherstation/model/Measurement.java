@@ -1,4 +1,5 @@
 package com.example.weatherstation.model;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

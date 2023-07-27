@@ -8,6 +8,5 @@ import java.util.List;
 
 
 public interface MeasurementRepository extends JpaRepository<Measurement, Long> {
-    List<Measurement> findByType(String type);
     List<Measurement> findAll(Specification<Measurement> spec);
 }
