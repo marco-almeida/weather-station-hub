@@ -19,3 +19,7 @@ That should be it.
 ## Development
 
 To rebuild a specific service, use: `docker compose up -d --no-deps --build <service_name>`
+
+## Documentation
+
+The swagger documentation is available at: `http://localhost:8080/swagger-ui/index.html`, which matches the `api-docs.yaml` file present in the `api` folder.
