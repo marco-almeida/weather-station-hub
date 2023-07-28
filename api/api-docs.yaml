@@ -1,0 +1,254 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/v1/station/{station_id}/payload:
+    post:
+      tags:
+      - measurement-controller
+      operationId: submitMeasurement
+      parameters:
+      - name: station_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Measurement'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MeasurementDTO'
+  /api/v1/station/{id}:
+    get:
+      tags:
+      - station-controller
+      operationId: getStationStuff
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Station'
+    post:
+      tags:
+      - station-controller
+      operationId: createStation
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Station'
+  /api/v1/measurement/{id}:
+    delete:
+      tags:
+      - measurement-controller
+      operationId: deleteMeasurement
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - measurement-controller
+      operationId: ammendMeasurement
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Measurement'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Measurement'
+  /api/v1/stations:
+    get:
+      tags:
+      - station-controller
+      operationId: getAllStationIds
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int64
+  /api/v1/stations/payloads:
+    get:
+      tags:
+      - measurement-controller
+      operationId: getAllMeasurements
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeasurementDTO'
+  /api/v1/station/{id}/available_measurement_types:
+    get:
+      tags:
+      - station-controller
+      operationId: getStationAvailableMeasurementTypes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+  /api/v1/measurement:
+    get:
+      tags:
+      - measurement-controller
+      operationId: getMeasurementsWhere
+      parameters:
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: station_ids
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int64
+      - name: greater_than
+        in: query
+        required: false
+        schema:
+          type: number
+          format: float
+      - name: less_equal_than
+        in: query
+        required: false
+        schema:
+          type: number
+          format: float
+      - name: earlier_equal_than
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: later_than
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeasurementDTO'
+components:
+  schemas:
+    Measurement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        timestamp:
+          type: integer
+          format: int64
+        type:
+          type: string
+        value:
+          type: number
+          format: double
+    MeasurementDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        timestamp:
+          type: integer
+          format: int64
+        type:
+          type: string
+        value:
+          type: number
+          format: double
+        stationId:
+          type: integer
+          format: int64
+    Station:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Measurement'
