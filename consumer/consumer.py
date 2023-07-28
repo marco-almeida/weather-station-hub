@@ -40,7 +40,7 @@ def msg_process(msg):
     payload["type"] = msg_type
     logger.info(f"Sending {msg_type} data {payload} to station {station_id}")
     response = requests.post(f"{API_URL}/station/{station_id}/payload", json=payload)
-    if response.status_code != 200:
+    if response.status_code != 201:
         logger.error(f"Failed to send data to station {station_id}: {response.text}")
 
 
